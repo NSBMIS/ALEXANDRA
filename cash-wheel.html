@@ -145,7 +145,8 @@
 
     <div id="resultPopup" class="result-popup">
         <div class="popup-content">
-            <h2 id="resultText"></h2>
+            <h2 id="resultText">YOU WON</h2>
+            <h3 id="prizeText" style="font-size: 2rem; color: #28a745;"></h3>
             <button onclick="closePopup()" class="spin-button">Close</button>
         </div>
     </div>
@@ -155,6 +156,7 @@
         const spinButton = document.getElementById('spinButton');
         const resultPopup = document.getElementById('resultPopup');
         const resultText = document.getElementById('resultText');
+        const prizeText = document.getElementById('prizeText');
 
         const prizes = [
             { value: '$30', count: 20 },
@@ -204,7 +206,7 @@
 
             setTimeout(() => {
                 const winningPrize = wheel.children[randomIndex].textContent;
-                resultText.textContent = `Congratulations! You won ${winningPrize}`;
+                prizeText.textContent = winningPrize;
                 resultPopup.classList.add('active');
                 spinning = false;
             }, 3000);
