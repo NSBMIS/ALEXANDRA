@@ -8,15 +8,22 @@
     <style>
         @font-face {
             font-family: 'LastChristmas';
-            src: url('LastChristmas_PERSONAL_USE_ONLY.otf') format('opentype');
+            src: url('./assets/fonts/LastChristmas_PERSONAL_USE_ONLY.otf') format('opentype');
+        }
+        h1 {
+            font-family: 'LastChristmas', sans-serif;
         }
         body {
-            font-family: 'LastChristmas', sans-serif;
+            background-image: url('./assets/images/christmas-oil-painting-background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
         }
     </style>
 </head>
-<body class="bg-red-100 min-h-screen flex items-center justify-center">
-    <div class="text-center">
+<body class="flex items-center justify-center">
+    <div class="text-center bg-white bg-opacity-80 p-8 rounded-lg shadow-lg">
         <h1 class="text-5xl font-bold text-red-600 mb-8">Merry Christmas, Alexandra!</h1>
         <div class="flex justify-center gap-4">
             <button 
