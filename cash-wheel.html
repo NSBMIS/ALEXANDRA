@@ -64,7 +64,8 @@
         }
 
         .segment {
-            flex: 0 0 20%;
+            flex: 0 0 auto;
+            width: 60px;
             text-align: center;
             padding: 15px;
             margin: 5px;
@@ -157,20 +158,37 @@
         const resultText = document.getElementById('resultText');
 
         const prizes = [
-            { value: '$30', count: 20 },
-            { value: '$40', count: 20 },
-            { value: '$50', count: 20 },
-            { value: '$60', count: 20 }
+            { value: '$30', count: 40 },
+            { value: '$40', count: 40 },
+            { value: '$50', count: 40 },
+            { value: '$60', count: 40 }
         ];
 
-        // Populate the wheel dynamically
-        prizes.forEach(prize => {
-            for (let i = 0; i < prize.count; i++) {
-                const segment = document.createElement('div');
-                segment.className = 'segment';
-                segment.textContent = prize.value;
-                wheel.appendChild(segment);
+        // Shuffle prizes to ensure no two consecutive prizes are the same
+        function shufflePrizes(prizes) {
+            const segments = [];
+            const pool = prizes.flatMap(prize => Array(prize.count).fill(prize.value));
+
+            while (pool.length) {
+                const nextValue = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+                if (segments.length === 0 || segments[segments.length - 1] !== nextValue) {
+                    segments.push(nextValue);
+                } else {
+                    pool.push(nextValue);
+                }
             }
+
+            return segments;
+        }
+
+        const shuffledPrizes = shufflePrizes(prizes);
+
+        // Populate the wheel dynamically with shuffled prizes
+        shuffledPrizes.forEach(prize => {
+            const segment = document.createElement('div');
+            segment.className = 'segment';
+            segment.textContent = prize;
+            wheel.appendChild(segment);
         });
 
         let spinning = false;
@@ -180,10 +198,10 @@
             spinning = true;
             spinButton.disabled = true;
 
-            const totalSegments = prizes.reduce((sum, prize) => sum + prize.count, 0);
+            const totalSegments = shuffledPrizes.length;
             const randomIndex = Math.floor(Math.random() * totalSegments);
             const fullSpins = 10; // Number of full spins
-            const spinDistance = -(fullSpins * totalSegments * 20 + randomIndex * 20);
+            const spinDistance = -(fullSpins * totalSegments * 60 + randomIndex * 60);
 
             wheel.style.transitionDuration = '5s';
             wheel.style.transform = `translateX(${spinDistance}px)`;
