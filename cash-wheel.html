@@ -46,7 +46,7 @@
 
         .arrow {
             position: absolute;
-            top: 10px;
+            top: 5px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
@@ -164,15 +164,22 @@
             { value: '$60', count: 20 }
         ];
 
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         // Populate the wheel dynamically
         function populateWheel(prizes) {
-            prizes.forEach(prize => {
-                for (let i = 0; i < prize.count; i++) {
-                    const segment = document.createElement('div');
-                    segment.className = 'segment';
-                    segment.textContent = prize.value;
-                    wheel.appendChild(segment);
-                }
+            const shuffledPrizes = shuffleArray(prizes.flatMap(prize => Array(prize.count).fill(prize.value)));
+            shuffledPrizes.forEach(prize => {
+                const segment = document.createElement('div');
+                segment.className = 'segment';
+                segment.textContent = prize;
+                wheel.appendChild(segment);
             });
             // Duplicate for seamless spin
             const clone = wheel.cloneNode(true);
@@ -188,19 +195,19 @@
             spinning = true;
             spinButton.disabled = true;
 
-            const totalSegments = prizes.reduce((sum, prize) => sum + prize.count, 0);
-            const randomIndex = Math.floor(Math.random() * totalSegments);
-            const spinDistance = -(randomIndex * 125 + Math.floor(Math.random() * 125));
+            const totalSegments = wheel.children.length;
+            const randomIndex = Math.floor(Math.random() * (totalSegments / 2));
+            const spinDistance = -(randomIndex * 125 + Math.random() * 500); // Faster spin
 
-            wheel.style.transitionDuration = '5s';
+            wheel.style.transitionDuration = '3s'; // Quicker spin duration
             wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
-                const winningPrize = prizes[Math.floor(randomIndex / 20)].value;
+                const winningPrize = wheel.children[randomIndex].textContent;
                 resultText.textContent = `Congratulations! You won ${winningPrize}`;
                 resultPopup.classList.add('active');
                 spinning = false;
-            }, 5000);
+            }, 3000);
         });
 
         function closePopup() {
