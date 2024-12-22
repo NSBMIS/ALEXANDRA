@@ -49,10 +49,9 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 150px;
+            width: 120px;
             height: 150px;
             border: 5px solid red;
-            border-radius: 10px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
             pointer-events: none;
             z-index: 10;
@@ -69,7 +68,6 @@
             width: 120px;
             text-align: center;
             padding: 15px;
-            margin: 5px;
             background: linear-gradient(to bottom, #ffefba, #ffffff);
             border-radius: 10px;
             font-size: 1.5rem;
@@ -196,11 +194,12 @@
             spinning = true;
             spinButton.disabled = true;
 
-            const totalSegments = wheel.children.length;
-            const randomIndex = Math.floor(Math.random() * (totalSegments / 2));
-            const spinDistance = -(randomIndex * 125 + Math.random() * 500); // Faster spin
+            const segmentWidth = 120; // Width of a single segment
+            const totalSegments = wheel.children.length / 2; // Only count original segments
+            const randomIndex = Math.floor(Math.random() * totalSegments);
+            const spinDistance = -(randomIndex * segmentWidth + Math.random() * segmentWidth); // Precise alignment
 
-            wheel.style.transitionDuration = '3s'; // Quicker spin duration
+            wheel.style.transitionDuration = '3s'; // Quick spin
             wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
