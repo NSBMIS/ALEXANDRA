@@ -28,7 +28,7 @@
         }
         .conveyor {
             display: flex;
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            transition: transform cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
         .item {
             flex: 0 0 20%;
@@ -114,13 +114,17 @@
             hasSpun = true;
 
             const chosenIndex = weightedRandom(cashPrizes);
-            const randomOffset = -(chosenIndex * 20 + Math.random() * 10); // Add variation
+            const totalItems = cashPrizes.length;
+            const fullLoops = Math.floor(Math.random() * 16) + 10; // Random 10-25 loops
+            const randomOffset = -(fullLoops * totalItems * 20 + chosenIndex * 20); // Add variation
+
+            conveyor.style.transitionDuration = `${fullLoops / 2}s`; // Adjust spin duration dynamically
             conveyor.style.transform = `translateX(${randomOffset}%)`;
 
             setTimeout(() => {
                 spinning = false;
                 resultMessage.textContent = `You won ${cashPrizes[chosenIndex].value}!`;
-            }, 4000);
+            }, (fullLoops / 2) * 1000);
         });
     </script>
 </body>
