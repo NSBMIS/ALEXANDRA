@@ -23,6 +23,28 @@
         button {
             font-family: sans-serif;
         }
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+        }
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .popup.active {
+            visibility: visible;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center">
@@ -35,11 +57,48 @@
                 Spin for a Gift 🎁
             </button>
             <button 
-                onclick="window.location.href='cash-wheel.html'"
+                onclick="showPopup()"
                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-8 px-12 rounded shadow-md transition-all text-2xl">
                 Spin for Cash 💵
             </button>
         </div>
     </div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <p class="text-lg mb-4">
+                By choosing this path, you are accepting full responsibility for breaking the rules of Secret Santa. This means you agree to take a monetary gift instead of the intended gift giver's choice. Proceed only if you accept these terms.
+            </p>
+            <label class="flex items-center gap-2 mb-4">
+                <input type="checkbox" id="consentCheckbox" />
+                <span>I accept full responsibility.</span>
+            </label>
+            <button onclick="proceedToCashWheel()" id="proceedButton" class="bg-green-500 text-white py-2 px-4 rounded" disabled>Proceed</button>
+            <button onclick="closePopup()" class="bg-gray-500 text-white py-2 px-4 rounded ml-2">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const popup = document.getElementById('popup');
+        const proceedButton = document.getElementById('proceedButton');
+        const consentCheckbox = document.getElementById('consentCheckbox');
+
+        function showPopup() {
+            popup.classList.add('active');
+        }
+
+        function closePopup() {
+            popup.classList.remove('active');
+        }
+
+        consentCheckbox.addEventListener('change', function() {
+            proceedButton.disabled = !this.checked;
+        });
+
+        function proceedToCashWheel() {
+            window.location.href = 'cash-wheel.html';
+        }
+    </script>
 </body>
 </html>
