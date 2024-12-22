@@ -6,6 +6,10 @@
     <title>Cash Conveyor Spin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @font-face {
+            font-family: 'LastChristmas';
+            src: url('./LastChristmas_PERSONAL_USE_ONLY.otf') format('opentype');
+        }
         body {
             background-image: url('./christmas-oil-painting-background.png');
             background-size: cover;
@@ -65,18 +69,27 @@
         .item:nth-child(6) { background: #FF6347; }
         .spin-button {
             margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 20px;
+            padding: 20px 40px;
+            font-size: 24px;
             background: #ff0000;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
+        }
+        .header {
+            font-family: 'LastChristmas', sans-serif;
+            font-size: 64px;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1 class="text-4xl text-white mb-8">Spin for Cash 💵</h1>
+    <h1 class="header">Spin for Cash 💵</h1>
     <div class="conveyor-container">
         <div class="arrow"></div>
         <div id="conveyor" class="conveyor">
