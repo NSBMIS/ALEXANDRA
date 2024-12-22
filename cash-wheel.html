@@ -18,9 +18,10 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             flex-direction: column;
             font-family: sans-serif;
+            padding-top: 50px;
         }
         .conveyor-container {
             width: 80%;
@@ -30,17 +31,17 @@
             border: 5px solid white;
             border-radius: 10px;
             box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 50px;
         }
         .arrow {
             position: absolute;
-            top: -10px;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 20px solid red;
+            width: 30px;
+            height: 30px;
+            background: red;
+            clip-path: polygon(50% 0, 0 100%, 100% 100%);
             z-index: 10;
         }
         .conveyor {
@@ -79,12 +80,13 @@
         }
         .header {
             font-family: 'LastChristmas', sans-serif;
-            font-size: 64px;
+            font-size: 80px;
             color: white;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 10px;
             text-align: center;
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -93,16 +95,7 @@
     <div class="conveyor-container">
         <div class="arrow"></div>
         <div id="conveyor" class="conveyor">
-            <div class="item">$30</div>
-            <div class="item">$40</div>
-            <div class="item">$50</div>
-            <div class="item">$60</div>
-            <div class="item">$70</div>
-            <div class="item">$100</div>
-            <div class="item">$30</div>
-            <div class="item">$40</div>
-            <div class="item">$50</div>
-            <div class="item">$60</div>
+            <!-- Dynamically generated cash items -->
         </div>
     </div>
     <button id="spinButton" class="spin-button">Spin</button>
@@ -116,21 +109,31 @@
         let hasSpun = false;
 
         const cashPrizes = [
-            { value: '$30', probability: 49 },
-            { value: '$40', probability: 49 },
-            { value: '$50', probability: 49 },
-            { value: '$60', probability: 49 },
-            { value: '$70', probability: 1 },
-            { value: '$100', probability: 1 }
+            { value: '$30', count: 20 },
+            { value: '$40', count: 20 },
+            { value: '$50', count: 20 },
+            { value: '$60', count: 20 },
+            { value: '$70', count: 2 },
+            { value: '$100', count: 2 }
         ];
 
+        // Populate the conveyor dynamically
+        cashPrizes.forEach(prize => {
+            for (let i = 0; i < prize.count; i++) {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.textContent = prize.value;
+                conveyor.appendChild(item);
+            }
+        });
+
         function weightedRandom(items) {
-            const totalWeight = items.reduce((sum, item) => sum + item.probability, 0);
+            const totalWeight = items.reduce((sum, item) => sum + item.count, 0);
             const randomNum = Math.random() * totalWeight;
             let weightSum = 0;
 
             for (let i = 0; i < items.length; i++) {
-                weightSum += items[i].probability;
+                weightSum += items[i].count;
                 if (randomNum <= weightSum) {
                     return i;
                 }
@@ -148,7 +151,7 @@
             hasSpun = true;
 
             const chosenIndex = weightedRandom(cashPrizes);
-            const totalItems = cashPrizes.length;
+            const totalItems = cashPrizes.reduce((sum, prize) => sum + prize.count, 0);
             const fullLoops = Math.floor(Math.random() * 16) + 10; // Random 10-25 loops
             const randomOffset = -(fullLoops * totalItems * 20 + chosenIndex * 20); // Add variation
 
