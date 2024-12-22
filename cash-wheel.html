@@ -155,7 +155,6 @@
         const wheel = document.getElementById('wheel');
         const spinButton = document.getElementById('spinButton');
         const resultPopup = document.getElementById('resultPopup');
-        const resultText = document.getElementById('resultText');
         const prizeText = document.getElementById('prizeText');
 
         const prizes = [
@@ -224,7 +223,7 @@
 
                 // Ensure only one box is chosen
                 if (closestSegment) {
-                    const winningPrize = closestSegment.textContent;
+                    const winningPrize = closestSegment.textContent.trim();
                     prizeText.textContent = winningPrize;
                     resultPopup.classList.add('active');
                 }
