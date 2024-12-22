@@ -31,7 +31,7 @@
         }
 
         .header {
-            font-size: 3rem;
+            font-size: 9rem;
             font-weight: bold;
             color: red;
             text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
@@ -44,9 +44,9 @@
             width: 80%;
             height: 150px;
             overflow: hidden;
-            border: 5px solid white;
+            border: 5px solid red;
             border-radius: 10px;
-            background-color: white;
+            background-color: red;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
         }
 
@@ -57,7 +57,8 @@
             transform: translateX(-50%);
             width: 120px;
             height: 150px;
-            border: 5px solid red;
+            border: none;
+            background-color: white;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
             pointer-events: none;
             z-index: 10;
@@ -103,40 +104,6 @@
             background-color: #6c757d;
             cursor: not-allowed;
         }
-
-        .result-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0s, opacity 0.3s;
-        }
-
-        .result-popup.active {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .popup-content {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .popup-content h2 {
-            font-size: 2.5rem;
-            color: #333;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -149,19 +116,9 @@
     </div>
     <button id="spinButton" class="spin-button">Spin</button>
 
-    <div id="resultPopup" class="result-popup">
-        <div class="popup-content">
-            <h2 id="resultText">YOU WON</h2>
-            <h3 id="prizeText" style="font-size: 2rem; color: #28a745;"></h3>
-            <button onclick="closePopup()" class="spin-button">Close</button>
-        </div>
-    </div>
-
     <script>
         const wheel = document.getElementById('wheel');
         const spinButton = document.getElementById('spinButton');
-        const resultPopup = document.getElementById('resultPopup');
-        const prizeText = document.getElementById('prizeText');
 
         const prizes = [
             { value: '$30', count: 20 },
@@ -227,19 +184,10 @@
                     }
                 });
 
-                // Ensure only one box is chosen
-                if (closestSegment) {
-                    const winningPrize = closestSegment.textContent.trim();
-                    prizeText.textContent = winningPrize;
-                    resultPopup.classList.add('active');
-                }
                 spinning = false;
+                spinButton.disabled = false;
             }, 3000);
         });
-
-        function closePopup() {
-            resultPopup.classList.remove('active');
-        }
     </script>
 </body>
 </html>
