@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas Alexandra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @font-face {
+            font-family: 'LastChristmas';
+            src: url('LastChristmas_PERSONAL_USE_ONLY.otf') format('opentype');
+        }
+        body {
+            font-family: 'LastChristmas', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-red-100 min-h-screen flex items-center justify-center">
+    <div class="text-center">
+        <h1 class="text-5xl font-bold text-red-600 mb-8">Merry Christmas, Alexandra!</h1>
+        <div class="flex justify-center gap-4">
+            <button 
+                onclick="window.location.href='gift-wheel.html'"
+                class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded shadow-md transition-all">
+                Spin for a Gift 🎁
+            </button>
+            <button 
+                onclick="window.location.href='cash-wheel.html'"
+                class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-6 rounded shadow-md transition-all">
+                Spin for Cash 💵
+            </button>
+        </div>
+    </div>
+</body>
+</html>
