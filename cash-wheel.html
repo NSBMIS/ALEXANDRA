@@ -3,170 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cash Conveyor Spin</title>
+    <title>Spin to Win</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @font-face {
-            font-family: 'LastChristmas';
-            src: url('./LastChristmas_PERSONAL_USE_ONLY.otf') format('opentype');
-        }
         body {
-            background-image: url('./christmas-oil-painting-background.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            min-height: 100vh;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fbc2eb);
+            background-size: 400% 400%;
+            animation: gradient 10s ease infinite;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
             flex-direction: column;
-            font-family: sans-serif;
-            padding-top: 50px;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
-        .conveyor-container {
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header {
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+        }
+
+        .wheel-container {
+            position: relative;
             width: 80%;
             height: 150px;
             overflow: hidden;
-            position: relative;
             border: 5px solid white;
             border-radius: 10px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-            margin-top: 50px;
+            background-color: white;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
         }
+
         .arrow {
             position: absolute;
-            top: 0;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 30px;
-            height: 30px;
-            background: red;
-            clip-path: polygon(50% 0, 0 100%, 100% 100%);
-            z-index: 10;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 30px solid red;
         }
-        .conveyor {
+
+        .wheel {
             display: flex;
-            transition: transform cubic-bezier(0.17, 0.67, 0.83, 0.67);
             position: absolute;
             will-change: transform;
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
-        .item {
+
+        .segment {
             flex: 0 0 20%;
             text-align: center;
-            background: linear-gradient(to bottom, #ffefd5, #ffe4b5);
-            padding: 20px;
+            padding: 15px;
             margin: 5px;
+            background: linear-gradient(to bottom, #ffefba, #ffffff);
             border-radius: 10px;
-            font-size: 24px;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: black;
+            color: #333;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
-        .item:nth-child(1) { background: #FFD700; }
-        .item:nth-child(2) { background: #C0C0C0; }
-        .item:nth-child(3) { background: #CD7F32; }
-        .item:nth-child(4) { background: #FFA07A; }
-        .item:nth-child(5) { background: #8FBC8F; }
-        .item:nth-child(6) { background: #FF6347; }
+
         .spin-button {
             margin-top: 20px;
-            padding: 20px 40px;
-            font-size: 24px;
-            background: #ff0000;
+            padding: 15px 30px;
+            font-size: 1.25rem;
+            background-color: #28a745;
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
         }
-        .header {
-            font-family: 'LastChristmas', sans-serif;
-            font-size: 80px;
-            color: white;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 20px;
+
+        .spin-button:hover {
+            background-color: #218838;
+        }
+
+        .spin-button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .result-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+        }
+
+        .result-popup.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 30px;
             border-radius: 10px;
             text-align: center;
-            margin-bottom: 30px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup-content h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <h1 class="header">Spin for Cash 💵</h1>
-    <div class="conveyor-container">
+    <h1 class="header">SPIN TO WIN</h1>
+    <div class="wheel-container">
         <div class="arrow"></div>
-        <div id="conveyor" class="conveyor">
-            <!-- Dynamically generated cash items -->
+        <div id="wheel" class="wheel">
+            <!-- Dynamically generated segments -->
         </div>
     </div>
     <button id="spinButton" class="spin-button">Spin</button>
-    <p id="resultMessage" class="text-white mt-4"></p>
+
+    <div id="resultPopup" class="result-popup">
+        <div class="popup-content">
+            <h2 id="resultText"></h2>
+            <button onclick="closePopup()" class="spin-button">Close</button>
+        </div>
+    </div>
 
     <script>
-        const conveyor = document.getElementById('conveyor');
+        const wheel = document.getElementById('wheel');
         const spinButton = document.getElementById('spinButton');
-        const resultMessage = document.getElementById('resultMessage');
-        let spinning = false;
-        let hasSpun = false;
+        const resultPopup = document.getElementById('resultPopup');
+        const resultText = document.getElementById('resultText');
 
-        const cashPrizes = [
+        const prizes = [
             { value: '$30', count: 20 },
             { value: '$40', count: 20 },
             { value: '$50', count: 20 },
-            { value: '$60', count: 20 },
-            { value: '$70', count: 2 },
-            { value: '$100', count: 2 }
+            { value: '$60', count: 20 }
         ];
 
-        // Populate the conveyor dynamically
-        cashPrizes.forEach(prize => {
+        // Populate the wheel dynamically
+        prizes.forEach(prize => {
             for (let i = 0; i < prize.count; i++) {
-                const item = document.createElement('div');
-                item.className = 'item';
-                item.textContent = prize.value;
-                conveyor.appendChild(item);
+                const segment = document.createElement('div');
+                segment.className = 'segment';
+                segment.textContent = prize.value;
+                wheel.appendChild(segment);
             }
         });
 
-        function weightedRandom(items) {
-            const totalWeight = items.reduce((sum, item) => sum + item.count, 0);
-            const randomNum = Math.random() * totalWeight;
-            let weightSum = 0;
-
-            for (let i = 0; i < items.length; i++) {
-                weightSum += items[i].count;
-                if (randomNum <= weightSum) {
-                    return i;
-                }
-            }
-        }
-
-        function loopItems() {
-            conveyor.appendChild(conveyor.firstElementChild.cloneNode(true));
-            conveyor.removeChild(conveyor.firstElementChild);
-        }
+        let spinning = false;
 
         spinButton.addEventListener('click', () => {
-            if (spinning || hasSpun) return;
+            if (spinning) return;
             spinning = true;
-            hasSpun = true;
+            spinButton.disabled = true;
 
-            const chosenIndex = weightedRandom(cashPrizes);
-            const totalItems = cashPrizes.reduce((sum, prize) => sum + prize.count, 0);
-            const fullLoops = Math.floor(Math.random() * 16) + 10; // Random 10-25 loops
-            const randomOffset = -(fullLoops * totalItems * 20 + chosenIndex * 20); // Add variation
+            const totalSegments = prizes.reduce((sum, prize) => sum + prize.count, 0);
+            const randomIndex = Math.floor(Math.random() * totalSegments);
+            const fullSpins = 10; // Number of full spins
+            const spinDistance = -(fullSpins * totalSegments * 20 + randomIndex * 20);
 
-            conveyor.style.transitionDuration = `${fullLoops / 2}s`; // Adjust spin duration dynamically
-            conveyor.style.transform = `translateX(${randomOffset}%)`;
-
-            for (let i = 0; i < fullLoops; i++) {
-                setTimeout(loopItems, (i + 1) * 100);
-            }
+            wheel.style.transitionDuration = '5s';
+            wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
+                const winningPrize = wheel.children[randomIndex].textContent;
+                resultText.textContent = `Congratulations! You won ${winningPrize}`;
+                resultPopup.classList.add('active');
                 spinning = false;
-                resultMessage.textContent = `You won ${cashPrizes[chosenIndex].value}!`;
-            }, (fullLoops / 2) * 1000);
+            }, 5000);
         });
+
+        function closePopup() {
+            resultPopup.classList.remove('active');
+        }
     </script>
 </body>
 </html>
