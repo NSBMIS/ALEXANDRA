@@ -46,14 +46,14 @@
 
         .arrow {
             position: absolute;
-            top: 0;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 30px solid transparent;
-            border-right: 30px solid transparent;
-            border-bottom: 50px solid black;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid black;
             z-index: 10;
         }
 
@@ -61,7 +61,6 @@
             display: flex;
             position: absolute;
             will-change: transform;
-            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
 
         .segment {
@@ -165,38 +164,22 @@
             { value: '$60', count: 20 }
         ];
 
-        // Shuffle prizes to ensure no two consecutive prizes are the same
-        function shufflePrizes(prizes) {
-            const segments = [];
-            const pool = prizes.flatMap(prize => Array(prize.count).fill(prize.value));
-
-            while (pool.length) {
-                const nextValue = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
-                if (segments.length === 0 || segments[segments.length - 1] !== nextValue) {
-                    segments.push(nextValue);
-                } else {
-                    pool.push(nextValue);
-                }
-            }
-
-            return segments;
-        }
-
-        const shuffledPrizes = shufflePrizes(prizes);
-
-        // Populate the wheel dynamically with shuffled prizes
-        function populateWheel() {
-            for (let i = 0; i < 3; i++) { // Repeat prizes to ensure wheel always has visible segments
-                shuffledPrizes.forEach(prize => {
+        // Populate the wheel dynamically
+        function populateWheel(prizes) {
+            prizes.forEach(prize => {
+                for (let i = 0; i < prize.count; i++) {
                     const segment = document.createElement('div');
                     segment.className = 'segment';
-                    segment.textContent = prize;
+                    segment.textContent = prize.value;
                     wheel.appendChild(segment);
-                });
-            }
+                }
+            });
+            // Duplicate for seamless spin
+            const clone = wheel.cloneNode(true);
+            wheel.appendChild(clone);
         }
 
-        populateWheel();
+        populateWheel(prizes);
 
         let spinning = false;
 
@@ -205,16 +188,15 @@
             spinning = true;
             spinButton.disabled = true;
 
-            const totalSegments = wheel.children.length;
-            const randomIndex = Math.floor(Math.random() * shuffledPrizes.length);
-            const fullSpins = 10; // Number of full spins
-            const spinDistance = -(fullSpins * totalSegments * 120 + randomIndex * 120);
+            const totalSegments = prizes.reduce((sum, prize) => sum + prize.count, 0);
+            const randomIndex = Math.floor(Math.random() * totalSegments);
+            const spinDistance = -(randomIndex * 125 + Math.floor(Math.random() * 125));
 
             wheel.style.transitionDuration = '5s';
             wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
-                const winningPrize = shuffledPrizes[randomIndex];
+                const winningPrize = prizes[Math.floor(randomIndex / 20)].value;
                 resultText.textContent = `Congratulations! You won ${winningPrize}`;
                 resultPopup.classList.add('active');
                 spinning = false;
