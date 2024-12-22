@@ -208,7 +208,7 @@
                 const rect = wheel.getBoundingClientRect();
                 const indicatorCenter = rect.left + rect.width / 2;
 
-                // Find the segment closest to the center
+                // Find the closest segment to the indicator's center
                 let closestSegment = null;
                 let closestDistance = Infinity;
                 Array.from(wheel.children).forEach(segment => {
@@ -222,9 +222,12 @@
                     }
                 });
 
-                const winningPrize = closestSegment.textContent;
-                prizeText.textContent = winningPrize;
-                resultPopup.classList.add('active');
+                // Ensure only one box is chosen
+                if (closestSegment) {
+                    const winningPrize = closestSegment.textContent;
+                    prizeText.textContent = winningPrize;
+                    resultPopup.classList.add('active');
+                }
                 spinning = false;
             }, 3000);
         });
