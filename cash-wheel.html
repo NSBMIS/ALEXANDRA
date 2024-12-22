@@ -24,6 +24,7 @@
             position: relative;
             border: 5px solid white;
             border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
         }
         .conveyor {
             display: flex;
@@ -32,19 +33,26 @@
         .item {
             flex: 0 0 20%;
             text-align: center;
-            background: white;
+            background: linear-gradient(to bottom, #ffefd5, #ffe4b5);
             padding: 20px;
             margin: 5px;
             border-radius: 10px;
             font-size: 24px;
             font-weight: bold;
             color: black;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .item:nth-child(1) { background: #FFD700; }
+        .item:nth-child(2) { background: #C0C0C0; }
+        .item:nth-child(3) { background: #CD7F32; }
+        .item:nth-child(4) { background: #FFA07A; }
+        .item:nth-child(5) { background: #8FBC8F; }
+        .item:nth-child(6) { background: #FF6347; }
         .spin-button {
             margin-top: 20px;
             padding: 10px 20px;
             font-size: 20px;
-            background: #00FF00;
+            background: #ff0000;
             color: white;
             border: none;
             border-radius: 5px;
@@ -59,11 +67,13 @@
             <div class="item">$30</div>
             <div class="item">$40</div>
             <div class="item">$50</div>
-            <div class="item">$1</div>
+            <div class="item">$60</div>
+            <div class="item">$70</div>
+            <div class="item">$100</div>
             <div class="item">$30</div>
             <div class="item">$40</div>
             <div class="item">$50</div>
-            <div class="item">$1</div>
+            <div class="item">$60</div>
         </div>
     </div>
     <button id="spinButton" class="spin-button">Spin</button>
@@ -74,20 +84,42 @@
         const spinButton = document.getElementById('spinButton');
         const resultMessage = document.getElementById('resultMessage');
         let spinning = false;
+        let hasSpun = false;
 
-        const cashPrizes = ['$30', '$40', '$50', '$1'];
+        const cashPrizes = [
+            { value: '$30', probability: 49 },
+            { value: '$40', probability: 49 },
+            { value: '$50', probability: 49 },
+            { value: '$60', probability: 49 },
+            { value: '$70', probability: 1 },
+            { value: '$100', probability: 1 }
+        ];
+
+        function weightedRandom(items) {
+            const totalWeight = items.reduce((sum, item) => sum + item.probability, 0);
+            const randomNum = Math.random() * totalWeight;
+            let weightSum = 0;
+
+            for (let i = 0; i < items.length; i++) {
+                weightSum += items[i].probability;
+                if (randomNum <= weightSum) {
+                    return i;
+                }
+            }
+        }
 
         spinButton.addEventListener('click', () => {
-            if (spinning) return;
+            if (spinning || hasSpun) return;
             spinning = true;
+            hasSpun = true;
 
-            const randomOffset = Math.floor(Math.random() * cashPrizes.length) * -20; // Choose random index
+            const chosenIndex = weightedRandom(cashPrizes);
+            const randomOffset = -(chosenIndex * 20 + Math.random() * 10); // Add variation
             conveyor.style.transform = `translateX(${randomOffset}%)`;
 
             setTimeout(() => {
                 spinning = false;
-                const chosenIndex = Math.abs(randomOffset / 20) % cashPrizes.length;
-                resultMessage.textContent = `You won ${cashPrizes[chosenIndex]}!`;
+                resultMessage.textContent = `You won ${cashPrizes[chosenIndex].value}!`;
             }, 4000);
         });
     </script>
