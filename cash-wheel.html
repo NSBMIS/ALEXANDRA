@@ -205,7 +205,24 @@
             wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
-                const winningPrize = wheel.children[randomIndex].textContent;
+                const rect = wheel.getBoundingClientRect();
+                const indicatorCenter = rect.left + rect.width / 2;
+
+                // Find the segment closest to the center
+                let closestSegment = null;
+                let closestDistance = Infinity;
+                Array.from(wheel.children).forEach(segment => {
+                    const segmentRect = segment.getBoundingClientRect();
+                    const segmentCenter = segmentRect.left + segmentRect.width / 2;
+                    const distance = Math.abs(segmentCenter - indicatorCenter);
+
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestSegment = segment;
+                    }
+                });
+
+                const winningPrize = closestSegment.textContent;
                 prizeText.textContent = winningPrize;
                 resultPopup.classList.add('active');
                 spinning = false;
