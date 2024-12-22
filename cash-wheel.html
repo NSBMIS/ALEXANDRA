@@ -46,14 +46,15 @@
 
         .arrow {
             position: absolute;
-            top: -20px;
+            top: 0;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-bottom: 30px solid red;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 50px solid black;
+            z-index: 10;
         }
 
         .wheel {
@@ -184,12 +185,18 @@
         const shuffledPrizes = shufflePrizes(prizes);
 
         // Populate the wheel dynamically with shuffled prizes
-        shuffledPrizes.forEach(prize => {
-            const segment = document.createElement('div');
-            segment.className = 'segment';
-            segment.textContent = prize;
-            wheel.appendChild(segment);
-        });
+        function populateWheel() {
+            for (let i = 0; i < 3; i++) { // Repeat prizes to ensure wheel always has visible segments
+                shuffledPrizes.forEach(prize => {
+                    const segment = document.createElement('div');
+                    segment.className = 'segment';
+                    segment.textContent = prize;
+                    wheel.appendChild(segment);
+                });
+            }
+        }
+
+        populateWheel();
 
         let spinning = false;
 
@@ -198,8 +205,8 @@
             spinning = true;
             spinButton.disabled = true;
 
-            const totalSegments = shuffledPrizes.length;
-            const randomIndex = Math.floor(Math.random() * totalSegments);
+            const totalSegments = wheel.children.length;
+            const randomIndex = Math.floor(Math.random() * shuffledPrizes.length);
             const fullSpins = 10; // Number of full spins
             const spinDistance = -(fullSpins * totalSegments * 120 + randomIndex * 120);
 
@@ -207,7 +214,7 @@
             wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
-                const winningPrize = wheel.children[randomIndex].textContent;
+                const winningPrize = shuffledPrizes[randomIndex];
                 resultText.textContent = `Congratulations! You won ${winningPrize}`;
                 resultPopup.classList.add('active');
                 spinning = false;
