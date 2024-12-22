@@ -65,7 +65,7 @@
 
         .segment {
             flex: 0 0 auto;
-            width: 60px;
+            width: 120px;
             text-align: center;
             padding: 15px;
             margin: 5px;
@@ -158,10 +158,10 @@
         const resultText = document.getElementById('resultText');
 
         const prizes = [
-            { value: '$30', count: 40 },
-            { value: '$40', count: 40 },
-            { value: '$50', count: 40 },
-            { value: '$60', count: 40 }
+            { value: '$30', count: 20 },
+            { value: '$40', count: 20 },
+            { value: '$50', count: 20 },
+            { value: '$60', count: 20 }
         ];
 
         // Shuffle prizes to ensure no two consecutive prizes are the same
@@ -201,7 +201,7 @@
             const totalSegments = shuffledPrizes.length;
             const randomIndex = Math.floor(Math.random() * totalSegments);
             const fullSpins = 10; // Number of full spins
-            const spinDistance = -(fullSpins * totalSegments * 60 + randomIndex * 60);
+            const spinDistance = -(fullSpins * totalSegments * 120 + randomIndex * 120);
 
             wheel.style.transitionDuration = '5s';
             wheel.style.transform = `translateX(${spinDistance}px)`;
