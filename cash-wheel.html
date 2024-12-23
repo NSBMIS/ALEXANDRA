@@ -3,146 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Spin to Win</title>
+  <title>Nick's Offer</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       background-color: white;
+      text-align: center;
     }
-    header {
-      background-color: red;
-      color: white;
-      padding: 20px 0;
-      font-size: 2rem;
+    .message {
+      font-size: 2.5rem;
       font-weight: bold;
     }
-    .wheel-container {
-      position: relative;
-      width: 300px;
-      height: 300px;
-      margin: 50px auto;
+    .message span {
+      color: red;
     }
-    .wheel {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 5px solid black;
-      position: relative;
-      overflow: hidden;
-      transform-origin: center;
-      transition: transform 3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-    }
-    .segment {
-      position: absolute;
-      width: 50%;
-      height: 50%;
-      background-color: green;
-      clip-path: polygon(100% 0, 100% 100%, 0 100%);
-      transform-origin: bottom left;
-    }
-    .segment:nth-child(odd) {
-      background-color: red;
-    }
-    .indicator {
-      width: 0;
-      height: 0;
-      border-left: 10px solid transparent;
-      border-right: 10px solid transparent;
-      border-bottom: 20px solid black;
-      position: absolute;
-      top: -20px;
-      left: calc(50% - 10px);
-    }
-    .spin-button {
-      padding: 10px 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1.2rem;
-    }
-    .spin-button:hover {
-      background-color: green;
-    }
-    .popup {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      border: 2px solid black;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    .popup h2 {
-      margin: 0;
-    }
-    .popup button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: red;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .popup button:hover {
-      background-color: green;
+    .message span:nth-child(odd) {
+      color: green;
     }
   </style>
 </head>
 <body>
-  <header>SPIN TO WIN</header>
-
-  <div class="wheel-container">
-    <div class="indicator"></div>
-    <div class="wheel" id="wheel">
-      <div class="segment" style="transform: rotate(0deg);"></div>
-      <div class="segment" style="transform: rotate(60deg);"></div>
-      <div class="segment" style="transform: rotate(120deg);"></div>
-      <div class="segment" style="transform: rotate(180deg);"></div>
-      <div class="segment" style="transform: rotate(240deg);"></div>
-      <div class="segment" style="transform: rotate(300deg);"></div>
-    </div>
+  <div class="message">
+    <span>Nick</span> will give you <span>$50</span> Via Apple Pay!
   </div>
-
-  <button class="spin-button" onclick="spinWheel()">SPIN</button>
-
-  <div class="popup" id="popup">
-    <h2 id="result"></h2>
-    <button onclick="closePopup()">OK</button>
-  </div>
-
-  <script>
-    const prizes = ['$30', '$40', '$50', '$60', '$40', '$50'];
-    const wheel = document.getElementById('wheel');
-    const popup = document.getElementById('popup');
-    const resultText = document.getElementById('result');
-    let isSpinning = false;
-
-    function spinWheel() {
-      if (isSpinning) return;
-      isSpinning = true;
-
-      const randomIndex = Math.floor(Math.random() * prizes.length);
-      const randomDegrees = randomIndex * (360 / prizes.length) + 3600;
-      
-      wheel.style.transform = `rotate(${randomDegrees}deg)`;
-
-      setTimeout(() => {
-        const finalIndex = randomIndex;
-        resultText.textContent = `Congratulations! You won ${prizes[finalIndex]}!`;
-        popup.style.display = 'block';
-        isSpinning = false;
-      }, 3000);
-    }
-
-    function closePopup() {
-      popup.style.display = 'none';
-    }
-  </script>
 </body>
 </html>
