@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spin to Win</title>
+    <title>Spin to Win - Christmas Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @font-face {
@@ -22,6 +22,7 @@
             min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
 
         @keyframes gradient {
@@ -31,23 +32,25 @@
         }
 
         .header {
-            font-size: 9rem;
+            font-size: 5rem;
             font-weight: bold;
-            color: red;
-            text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
-            margin-bottom: 20px;
+            color: #b71c1c;
+            text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
             font-family: 'LastChristmas', sans-serif;
+            text-align: center;
         }
 
         .wheel-container {
             position: relative;
-            width: 80%;
-            height: 150px;
+            width: 90%;
+            height: 200px;
             overflow: hidden;
-            border: 5px solid red;
-            border-radius: 10px;
-            background-color: red;
+            border: 5px solid #d32f2f;
+            border-radius: 20px;
+            background-color: white;
             box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
         }
 
         .indicator {
@@ -55,11 +58,12 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 120px;
-            height: 150px;
-            border: none;
-            background-color: white;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+            width: 150px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 4px solid #b71c1c;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
             pointer-events: none;
             z-index: 10;
         }
@@ -72,53 +76,97 @@
 
         .segment {
             flex: 0 0 auto;
-            width: 120px;
+            width: 140px;
             text-align: center;
             padding: 15px;
             background: linear-gradient(to bottom, #ffefba, #ffffff);
             border-radius: 10px;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             color: #333;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 5px;
         }
 
         .spin-button {
             margin-top: 20px;
             padding: 15px 30px;
-            font-size: 1.25rem;
-            background-color: #28a745;
+            font-size: 1.5rem;
+            background-color: #0288d1;
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
             transition: background-color 0.3s;
         }
 
         .spin-button:hover {
-            background-color: #218838;
+            background-color: #0277bd;
         }
 
         .spin-button:disabled {
             background-color: #6c757d;
             cursor: not-allowed;
         }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s;
+        }
+
+        .popup.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-content h2 {
+            font-size: 2.5rem;
+            color: #b71c1c;
+        }
     </style>
 </head>
 <body>
-    <h1 class="header">SPIN TO WIN</h1>
+    <h1 class="header">Spin to Win - Christmas Edition</h1>
     <div class="wheel-container">
         <div class="indicator"></div>
         <div id="wheel" class="wheel">
             <!-- Dynamically generated segments -->
         </div>
     </div>
-    <button id="spinButton" class="spin-button">Spin</button>
+    <button id="spinButton" class="spin-button">Spin Now</button>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2>Congratulations!</h2>
+            <p id="prizeText" style="font-size: 1.8rem; color: #4caf50;"></p>
+            <button onclick="closePopup()" class="spin-button">Close</button>
+        </div>
+    </div>
 
     <script>
         const wheel = document.getElementById('wheel');
         const spinButton = document.getElementById('spinButton');
+        const popup = document.getElementById('popup');
+        const prizeText = document.getElementById('prizeText');
 
         const prizes = [
             { value: '$30', count: 20 },
@@ -135,7 +183,6 @@
             return array;
         }
 
-        // Populate the wheel dynamically
         function populateWheel(prizes) {
             const shuffledPrizes = shuffleArray(prizes.flatMap(prize => Array(prize.count).fill(prize.value)));
             shuffledPrizes.forEach(prize => {
@@ -144,7 +191,6 @@
                 segment.textContent = prize;
                 wheel.appendChild(segment);
             });
-            // Duplicate for seamless spin
             const clone = wheel.cloneNode(true);
             wheel.appendChild(clone);
         }
@@ -158,19 +204,18 @@
             spinning = true;
             spinButton.disabled = true;
 
-            const segmentWidth = 120; // Width of a single segment
-            const totalSegments = wheel.children.length / 2; // Only count original segments
+            const segmentWidth = 140;
+            const totalSegments = wheel.children.length / 2;
             const randomIndex = Math.floor(Math.random() * totalSegments);
-            const spinDistance = -(randomIndex * segmentWidth + Math.random() * segmentWidth); // Precise alignment
+            const spinDistance = -(randomIndex * segmentWidth + Math.random() * segmentWidth);
 
-            wheel.style.transitionDuration = '3s'; // Quick spin
+            wheel.style.transitionDuration = '5s';
             wheel.style.transform = `translateX(${spinDistance}px)`;
 
             setTimeout(() => {
                 const rect = wheel.getBoundingClientRect();
                 const indicatorCenter = rect.left + rect.width / 2;
 
-                // Find the closest segment to the indicator's center
                 let closestSegment = null;
                 let closestDistance = Infinity;
                 Array.from(wheel.children).forEach(segment => {
@@ -184,10 +229,18 @@
                     }
                 });
 
+                if (closestSegment) {
+                    prizeText.textContent = `You won ${closestSegment.textContent.trim()}!`;
+                    popup.classList.add('active');
+                }
+
                 spinning = false;
-                spinButton.disabled = false;
-            }, 3000);
+            }, 5000);
         });
+
+        function closePopup() {
+            popup.classList.remove('active');
+        }
     </script>
 </body>
 </html>
