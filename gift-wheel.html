@@ -11,7 +11,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-image: url('christmas-background.jpg');
+      background-image: url('A_festive_Christmas-themed_background_horizontal.png');
       background-size: cover;
       background-position: center;
     }
@@ -45,7 +45,7 @@
       font-weight: bold;
       cursor: pointer;
       border: 2px solid black;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
       position: relative;
     }
     .box img {
@@ -64,6 +64,7 @@
       background-image: none;
       background-color: white;
       pointer-events: none;
+      transform: scale(1.1);
     }
     .popup-container {
       display: flex;
@@ -104,9 +105,9 @@
 
   <script>
     const photos = [
-  'gift1.png', 'gift2.png', 'gift3.png', 'gift4.png', 'gift5.png', 'gift6.png',
-  'gift7.png', 'gift8.png', 'gift9.png', 'gift10.png', 'gift11.png', 'gift12.png' // Echo Show 8
-];
+      'gift1.png', 'gift2.png', 'gift3.png', 'gift4.png', 'gift5.png', 'gift6.png',
+      'gift7.png', 'gift8.png', 'gift9.png', 'gift10.png', 'gift11.png', 'gift12.png'
+    ];
 
     const descriptions = [
       '1080P Dash Cam with Night Vision',
@@ -119,7 +120,7 @@
       'Luxury Faux Fur Blanket',
       'Chocolate Coal Stocking Stuffer',
       'Super Mario Party Jamboree for Switch',
-      'Echo Show 8 (Stand Sold Separately)' // Corresponds to gift12.png,
+      'Echo Show 8 (Stand Sold Separately)',
       'RENPHO Eye Massager with Heat'
     ];
 
