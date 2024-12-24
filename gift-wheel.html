@@ -11,18 +11,22 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: white;
+      background-image: url('christmas-background.jpg');
+      background-size: cover;
+      background-position: center;
     }
     h1 {
       margin: 20px;
       font-size: 2.5rem;
       color: #333;
+      text-shadow: 2px 2px 5px white;
     }
     .instructions {
       margin: 10px;
       text-align: center;
       font-size: 1.2rem;
-      color: #555;
+      color: white;
+      text-shadow: 1px 1px 3px black;
     }
     .grid {
       display: grid;
@@ -42,6 +46,19 @@
       cursor: pointer;
       border: 2px solid black;
       transition: background-color 0.3s ease;
+      position: relative;
+    }
+    .box img {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .box.revealed img {
+      display: block;
     }
     .box.revealed {
       background-image: none;
@@ -61,6 +78,8 @@
       align-items: center;
       border: 2px solid black;
       padding: 10px;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     .popup img {
       width: 150px;
@@ -86,7 +105,7 @@
   <script>
     const photos = [
   'gift1.png', 'gift2.png', 'gift3.png', 'gift4.png', 'gift5.png', 'gift6.png',
-  'gift7.png', 'gift8.png', 'gift9.png', 'gift10.png', 'gift11.png', 'gift12.png'
+  'gift7.png', 'gift8.png', 'gift9.png', 'gift10.png', 'gift11.png', 'gift12.png' // Echo Show 8
 ];
 
     const descriptions = [
@@ -100,7 +119,7 @@
       'Luxury Faux Fur Blanket',
       'Chocolate Coal Stocking Stuffer',
       'Super Mario Party Jamboree for Switch',
-      'Echo Show 8 (Stand Sold Separately)',
+      'Echo Show 8 (Stand Sold Separately)' // Corresponds to gift12.png,
       'RENPHO Eye Massager with Heat'
     ];
 
@@ -115,6 +134,11 @@
       box.classList.add('box');
       box.dataset.index = index;
 
+      const img = document.createElement('img');
+      img.src = photo;
+      img.alt = descriptions[index];
+
+      box.appendChild(img);
       box.addEventListener('click', () => handleBoxClick(index, box));
 
       grid.appendChild(box);
