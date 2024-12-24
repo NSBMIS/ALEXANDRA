@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photo Mines Game</title>
+  <title>Pick a Gift</title>
   <style>
     body {
       margin: 0;
@@ -13,21 +13,26 @@
       align-items: center;
       background-color: white;
     }
-    .instructions {
+    h1 {
       margin: 20px;
+      font-size: 2.5rem;
+      color: #333;
+    }
+    .instructions {
+      margin: 10px;
       text-align: center;
       font-size: 1.2rem;
-      color: #333;
+      color: #555;
     }
     .grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
+      gap: 15px;
       margin: 20px;
     }
     .box {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
       background-color: lightgray;
       display: flex;
       justify-content: center;
@@ -55,8 +60,8 @@
       padding: 10px;
     }
     .popup img {
-      width: 100px;
-      height: 100px;
+      width: 150px;
+      height: 150px;
     }
     .popup p {
       margin: 5px 0 0;
@@ -64,9 +69,9 @@
   </style>
 </head>
 <body>
-  <h1>Photo Mines Game</h1>
+  <h1>Pick a Gift</h1>
   <div class="instructions">
-    Click on 3 boxes to reveal hidden items. Once all 3 are revealed, their descriptions will be displayed below.
+    Click on 3 boxes to reveal your gifts. Beware, one box contains coal, and if you reveal the coal, you win nothing!
   </div>
   <div class="grid" id="grid">
     <!-- Boxes will be generated here -->
@@ -77,28 +82,29 @@
 
   <script>
     const photos = [
-  'photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg', 'photo5.jpg', 'photo6.jpg',
-  'photo7.jpg', 'photo8.jpg', 'photo9.jpg', 'photo10.jpg', 'photo11.jpg', 'photo12.jpg'
-];
+      'photo1.jpg', 'photo2.jpg', 'photo3.jpg', 'photo4.jpg', 'photo5.jpg', 'photo6.jpg',
+      'photo7.jpg', 'photo8.jpg', 'photo9.jpg', 'photo10.jpg', 'photo11.jpg', 'photo12.jpg'
+    ];
 
     const descriptions = [
-  '1080P Dash Cam with Night Vision',
-  'Cozy Beige Faux Fur Blanket',
-  'UGG Women\'s Cozy Slippers',
-  '49ers Barrel Coaster Set',
-  '49ers Wireless Charger & Organizer',
-  'Kombucha Variety Pack - 24 Cans',
-  '15.6\" WiFi Digital Picture Frame',
-  'Luxury Faux Fur Blanket',
-  'Chocolate Coal Stocking Stuffer',
-  'Super Mario Party Jamboree for Switch',
-  'Echo Show 8 (Stand Sold Separately)',
-  'Placeholder Description'
-];
+      '1080P Dash Cam with Night Vision',
+      'Cozy Beige Faux Fur Blanket',
+      'UGG Women\'s Cozy Slippers',
+      '49ers Barrel Coaster Set',
+      '49ers Wireless Charger & Organizer',
+      'Kombucha Variety Pack - 24 Cans',
+      '15.6\" WiFi Digital Picture Frame',
+      'Luxury Faux Fur Blanket',
+      'Chocolate Coal Stocking Stuffer',
+      'Super Mario Party Jamboree for Switch',
+      'Echo Show 8 (Stand Sold Separately)',
+      'RENPHO Eye Massager with Heat'
+    ];
 
     const grid = document.getElementById('grid');
     const popupContainer = document.getElementById('popup-container');
     let selectedPhotos = [];
+    const COAL_INDEX = 8; // The box with coal
 
     // Generate boxes
     photos.forEach((photo, index) => {
@@ -134,7 +140,11 @@
         img.alt = descriptions[index];
 
         const text = document.createElement('p');
-        text.textContent = descriptions[index];
+        if (index === COAL_INDEX) {
+          text.textContent = 'Coal - You win nothing!';
+        } else {
+          text.textContent = descriptions[index];
+        }
 
         popup.appendChild(img);
         popup.appendChild(text);
