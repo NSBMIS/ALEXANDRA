@@ -94,7 +94,7 @@
 <body>
   <h1>Pick a Gift</h1>
   <div class="instructions">
-    Click on 3 boxes to reveal your gifts. Beware, one box contains coal. If you reveal the coal, you must refresh the page to try again!
+    Click on 4 boxes to reveal your gifts. Beware, one box contains coal. If you reveal the coal, you must refresh the page to try again!
   </div>
   <div class="grid" id="grid">
     <!-- Boxes will be generated here -->
@@ -146,12 +146,12 @@
     });
 
     function handleBoxClick(index, box) {
-      if (selectedPhotos.length >= 3 || selectedPhotos.includes(index)) return;
+      if (selectedPhotos.length >= 4 || selectedPhotos.includes(index)) return;
 
       box.classList.add('revealed');
       selectedPhotos.push(index);
 
-      if (selectedPhotos.length === 3) {
+      if (selectedPhotos.length === 4) {
         revealSelection();
       }
     }
